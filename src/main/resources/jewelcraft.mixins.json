@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "package": "net.salju.jewelcraft.mixins",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "jewelcraft.refmap.json",
+  "mixins": [
+     "WanderingTraderMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}

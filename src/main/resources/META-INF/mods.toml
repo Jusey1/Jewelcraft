@@ -1,0 +1,31 @@
+modLoader="javafml"
+loaderVersion="[43,)"
+license="MIT License"
+
+[[mods]]
+modId="jewelcraft"
+version="1.2.1"
+displayName="Jewelcraft"
+credits="Jusey1, Burack"
+displayURL="https://discord.gg/s7QaYGUzZU"
+authors="Jusey1"
+description='''
+Craft & enchant your own jewelry...
+'''
+
+[[dependencies.jewelcraft]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.19.2]"
+    ordering="NONE"
+    side="BOTH"
+
+
+
+[[dependencies.jewelcraft]]
+    modId="curios_api"
+    mandatory=false
+    versionRange="[0,)"
+    ordering="NONE"
+    side="BOTH"
+
