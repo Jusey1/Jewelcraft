@@ -1,0 +1,7 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "jewelcraft:items/golden_ring_quartz"
+  },
+  "render_type": "translucent"
+}

@@ -1,0 +1,7 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "jewelcraft:items/iron_ring_shadow"
+  },
+  "render_type": "translucent"
+}

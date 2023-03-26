@@ -1,0 +1,7 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "jewelcraft:items/iron_amulet_onyx"
+  },
+  "render_type": "translucent"
+}

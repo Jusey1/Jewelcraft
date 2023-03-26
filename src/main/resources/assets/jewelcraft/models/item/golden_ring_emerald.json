@@ -1,0 +1,7 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "jewelcraft:items/golden_ring_emerald"
+  },
+  "render_type": "translucent"
+}
