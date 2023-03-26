@@ -1,0 +1,26 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "category": "misc",
+    "pattern": [
+        " Is",
+        "IGI",
+        "nI "
+    ],
+    "key": {
+        "I": {
+            "item": "minecraft:gold_ingot"
+        },
+        "s": {
+            "item": "minecraft:string"
+        },
+        "G": {
+            "item": "minecraft:obsidian"
+        },
+        "n": {
+            "item": "minecraft:gold_nugget"
+        }
+    },
+    "result": {
+        "item": "jewelcraft:golden_amulet_onyx"
+    }
+}

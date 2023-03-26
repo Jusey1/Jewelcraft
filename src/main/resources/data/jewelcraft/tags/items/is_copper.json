@@ -1,0 +1,23 @@
+{
+  "replace": "false",
+  "values": [
+    "jewelcraft:copper_amulet_amethyst",
+    "jewelcraft:copper_amulet_emerald",
+    "jewelcraft:copper_amulet_diamond",
+    "jewelcraft:copper_amulet_lapis",
+    "jewelcraft:copper_amulet_redstone",
+    "jewelcraft:copper_amulet_quartz",
+    "jewelcraft:copper_amulet_onyx",
+    "jewelcraft:copper_amulet_shadow",
+    "jewelcraft:copper_amulet_rose",
+    "jewelcraft:copper_ring_amethyst",
+    "jewelcraft:copper_ring_emerald",
+    "jewelcraft:copper_ring_diamond",
+    "jewelcraft:copper_ring_lapis",
+    "jewelcraft:copper_ring_redstone",
+    "jewelcraft:copper_ring_quartz",
+    "jewelcraft:copper_ring_onyx",
+    "jewelcraft:copper_ring_shadow",
+    "jewelcraft:copper_ring_rose"
+  ]
+}

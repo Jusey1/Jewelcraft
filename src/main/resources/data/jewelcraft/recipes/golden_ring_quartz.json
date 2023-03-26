@@ -1,0 +1,23 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "category": "misc",
+    "pattern": [
+        "nIn",
+        "IGI",
+        "nIn"
+    ],
+    "key": {
+        "I": {
+            "item": "minecraft:gold_ingot"
+        },
+        "G": {
+            "item": "minecraft:quartz"
+        },
+        "n": {
+            "item": "minecraft:gold_nugget"
+        }
+    },
+    "result": {
+        "item": "jewelcraft:golden_ring_quartz"
+    }
+}

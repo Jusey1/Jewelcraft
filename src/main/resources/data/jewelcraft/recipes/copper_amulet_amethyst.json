@@ -1,0 +1,23 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "category": "misc",
+    "pattern": [
+        " Is",
+        "IGI",
+        " I "
+    ],
+    "key": {
+        "I": {
+            "item": "minecraft:copper_ingot"
+        },
+        "s": {
+            "item": "minecraft:string"
+        },
+        "G": {
+            "item": "minecraft:amethyst_shard"
+        }
+    },
+    "result": {
+        "item": "jewelcraft:copper_amulet_amethyst"
+    }
+}

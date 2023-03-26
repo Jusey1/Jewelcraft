@@ -1,0 +1,23 @@
+{
+  "replace": "false",
+  "values": [
+    "jewelcraft:golden_amulet_amethyst",
+    "jewelcraft:golden_amulet_emerald",
+    "jewelcraft:golden_amulet_diamond",
+    "jewelcraft:golden_amulet_lapis",
+    "jewelcraft:golden_amulet_redstone",
+    "jewelcraft:golden_amulet_quartz",
+    "jewelcraft:golden_amulet_onyx",
+    "jewelcraft:golden_amulet_shadow",
+    "jewelcraft:golden_amulet_rose",
+    "jewelcraft:golden_ring_amethyst",
+    "jewelcraft:golden_ring_emerald",
+    "jewelcraft:golden_ring_diamond",
+    "jewelcraft:golden_ring_lapis",
+    "jewelcraft:golden_ring_redstone",
+    "jewelcraft:golden_ring_quartz",
+    "jewelcraft:golden_ring_onyx",
+    "jewelcraft:golden_ring_shadow",
+    "jewelcraft:golden_ring_rose"
+  ]
+}

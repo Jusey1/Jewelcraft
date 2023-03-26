@@ -1,0 +1,20 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "category": "misc",
+    "pattern": [
+        " I ",
+        "IGI",
+        " I "
+    ],
+    "key": {
+        "I": {
+            "item": "minecraft:copper_ingot"
+        },
+        "G": {
+            "item": "minecraft:redstone"
+        }
+    },
+    "result": {
+        "item": "jewelcraft:copper_ring_redstone"
+    }
+}

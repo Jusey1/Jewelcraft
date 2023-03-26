@@ -1,0 +1,23 @@
+{
+  "replace": "false",
+  "values": [
+    "jewelcraft:iron_amulet_amethyst",
+    "jewelcraft:iron_amulet_emerald",
+    "jewelcraft:iron_amulet_diamond",
+    "jewelcraft:iron_amulet_lapis",
+    "jewelcraft:iron_amulet_redstone",
+    "jewelcraft:iron_amulet_quartz",
+    "jewelcraft:iron_amulet_onyx",
+    "jewelcraft:iron_amulet_shadow",
+    "jewelcraft:iron_amulet_rose",
+    "jewelcraft:iron_ring_amethyst",
+    "jewelcraft:iron_ring_emerald",
+    "jewelcraft:iron_ring_diamond",
+    "jewelcraft:iron_ring_lapis",
+    "jewelcraft:iron_ring_redstone",
+    "jewelcraft:iron_ring_quartz",
+    "jewelcraft:iron_ring_onyx",
+    "jewelcraft:iron_ring_shadow",
+    "jewelcraft:iron_ring_rose"
+  ]
+}
