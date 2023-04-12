@@ -25,10 +25,12 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.SugarCaneBlock;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.BoneMealItem;
+import net.minecraft.world.item.ArrowItem;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.monster.ZombifiedPiglin;
@@ -39,6 +41,8 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.util.RandomSource;
+import net.minecraft.util.Mth;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.core.BlockPos;
 
@@ -55,13 +59,24 @@ public class JewelcraftEventsProcedure {
 			LivingEntity target = event.getEntity();
 			if (target instanceof Player player) {
 				ItemStack amulet = JewelcraftEventsProcedure.getAmulet(player);
-				if (amulet != null) {
-					if (EnchantmentHelper.getItemEnchantmentLevel(JewelryEnchantments.DEFLECT.get(), amulet) != 0 && event.getSource().getDirectEntity() != null) {
-						Entity direct = event.getSource().getDirectEntity();
-						if (direct instanceof AbstractArrow arrow && !(player.isBlocking())) {
-							if ((arrow.getOwner() instanceof Player && Math.random() <= 0.2) || (!(arrow.getOwner() instanceof Player) && Math.random() <= 0.65)) {
-								arrow.discard();
-								event.setCanceled(true);
+				Level world = player.level;
+				if (!world.isClientSide) {
+					if (amulet != null) {
+						if (EnchantmentHelper.getItemEnchantmentLevel(JewelryEnchantments.DEFLECT.get(), amulet) != 0 && event.getSource().getDirectEntity() != null) {
+							Entity direct = event.getSource().getDirectEntity();
+							if (direct instanceof AbstractArrow arrow && !(player.isBlocking())) {
+								if ((arrow.getOwner() instanceof Player && Math.random() <= 0.2) || (!(arrow.getOwner() instanceof Player) && Math.random() <= 0.65)) {
+									event.setCanceled(true);
+									float x = ((float) Mth.nextDouble(RandomSource.create(), 175, 185));
+									float y = ((float) Mth.nextDouble(RandomSource.create(), -8, 8));
+									ArrowItem item = (ArrowItem) (Items.ARROW);
+									ItemStack stack = new ItemStack(Items.ARROW);
+									AbstractArrow newbie = item.createArrow(world, stack, player);
+									newbie.shootFromRotation(player, (arrow.getOwner().getXRot() - x), (arrow.getOwner().getYRot() + y), 0.0F, 0.65F * 3.0F, 1.0F);
+									newbie.setCritArrow(true);
+									arrow.discard();
+									world.addFreshEntity(newbie);
+								}
 							}
 						}
 					}
