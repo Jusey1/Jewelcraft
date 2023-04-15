@@ -44,6 +44,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.Mth;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.network.chat.Component;
 import net.minecraft.core.BlockPos;
 
 import javax.annotation.Nullable;
@@ -131,18 +132,10 @@ public class JewelcraftEventsProcedure {
 		if (event != null && event.getEntity() != null && event.getAttackingPlayer() != null) {
 			Player player = event.getAttackingPlayer();
 			int xp = event.getDroppedExperience();
-			List<ItemStack> rings = JewelcraftEventsProcedure.getRings(player);
 			ItemStack amulet = JewelcraftEventsProcedure.getAmulet(player);
-			if (rings.size() > 0) {
-				for (ItemStack ring : rings) {
-					if (EnchantmentHelper.getItemEnchantmentLevel(JewelryEnchantments.KYANITE.get(), ring) != 0) {
-						event.setDroppedExperience(xp * 2);
-					}
-				}
-			}
 			if (amulet != null) {
 				if (EnchantmentHelper.getItemEnchantmentLevel(JewelryEnchantments.KYANITE.get(), amulet) != 0) {
-					event.setDroppedExperience(xp * 4);
+					event.setDroppedExperience(xp * 5);
 				}
 			}
 		}
@@ -159,13 +152,16 @@ public class JewelcraftEventsProcedure {
 				if (rings.size() > 0) {
 					for (ItemStack ring : rings) {
 						if (EnchantmentHelper.getItemEnchantmentLevel(JewelryEnchantments.KYANITE.get(), ring) != 0) {
-							if (player.experienceLevel > 15) {
-								player.giveExperienceLevels(-15);
+							if (player.experienceLevel > 5 || player.getAbilities().instabuild) {
+								if (!player.getAbilities().instabuild)
+									player.giveExperienceLevels(-5);
 								player.playSound(SoundEvents.ENCHANTMENT_TABLE_USE, 1.0F, 1.0F);
 								player.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.ENCHANTED_BOOK));
 								EnchantmentHelper.setEnchantments(EnchantmentHelper.getEnchantments(item), player.getMainHandItem());
 								player.playSound(SoundEvents.ITEM_BREAK, 1.0F, 1.0F);
 								item.shrink(1);
+							} else {
+								player.displayClientMessage(Component.translatable("desc.jewelcraft.kyanite_xp"), (true));
 							}
 						}
 					}

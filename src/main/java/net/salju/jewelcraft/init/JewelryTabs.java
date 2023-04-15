@@ -1,6 +1,5 @@
 package net.salju.jewelcraft.init;
 
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.CreativeModeTab;
 
@@ -11,7 +10,7 @@ public class JewelryTabs {
 		JEWELCRAFT_TAB = new CreativeModeTab("jewelcraft_tab") {
 			@Override
 			public ItemStack makeIcon() {
-				return new ItemStack(Items.DIAMOND);
+				return new ItemStack(JewelryItems.JEWELRY_BOX.get());
 			}
 
 			@Override
