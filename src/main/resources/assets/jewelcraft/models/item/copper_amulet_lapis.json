@@ -1,7 +1,7 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "jewelcraft:items/copper_amulet_lapis"
+    "layer0": "jewelcraft:item/copper_amulet_lapis"
   },
   "render_type": "translucent"
 }

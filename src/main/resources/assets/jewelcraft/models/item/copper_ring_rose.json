@@ -1,7 +1,7 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "jewelcraft:items/copper_ring_rose"
+    "layer0": "jewelcraft:item/copper_ring_rose"
   },
   "render_type": "translucent"
 }

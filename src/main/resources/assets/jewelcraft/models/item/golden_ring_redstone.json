@@ -1,7 +1,7 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "jewelcraft:items/golden_ring_redstone"
+    "layer0": "jewelcraft:item/golden_ring_redstone"
   },
   "render_type": "translucent"
 }

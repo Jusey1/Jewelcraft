@@ -1,7 +1,7 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "jewelcraft:items/iron_amulet_amethyst"
+    "layer0": "jewelcraft:item/iron_amulet_amethyst"
   },
   "render_type": "translucent"
 }

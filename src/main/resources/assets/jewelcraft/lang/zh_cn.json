@@ -1,8 +1,8 @@
 {
   "enchantment.jewelcraft.critical.desc": "增加暴击伤害，同时附加较小的随机暴击伤害",
-  "desc.jewelcraft.box": "打开以获得随机的珠宝附魔",
-  "item.jewelcraft.copper_ring_onyx": "黑玛瑙铜戒指",
   "enchantment.jewelcraft.satisfication": "饱足",
+  "item.jewelcraft.copper_ring_onyx": "黑玛瑙铜戒指",
+  "desc.jewelcraft.box": "打开以获得随机的珠宝附魔",
   "enchantment.jewelcraft.totem": "钛矿",
   "item.jewelcraft.iron_amulet_shadow": "奥术铁护符",
   "item.jewelcraft.iron_amulet_amethyst": "紫水晶铁护符",
@@ -57,6 +57,7 @@
   "item.jewelcraft.iron_ring_rose": "玫瑰石英铁戒指",
   "item.jewelcraft.kyan_ring": "魔法石",
   "enchantment.jewelcraft.rainbow": "萤明",
+  "desc.jewelcraft.kyanite_xp": "你需要更多的经验水平",
   "item.jewelcraft.golden_amulet_redstone": "红石金戒指",
   "item.jewelcraft.golden_amulet_diamond": "钻石金护符",
   "item.jewelcraft.copper_amulet_redstone": "红石铜护符",
