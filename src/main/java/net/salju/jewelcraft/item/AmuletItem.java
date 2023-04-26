@@ -1,11 +1,8 @@
 package net.salju.jewelcraft.item;
 
 import top.theillusivec4.curios.api.SlotContext;
-
-import net.salju.jewelcraft.init.JewelryTabs;
-import net.salju.jewelcraft.init.JewelryEnchantments;
-
-import net.minecraftforge.common.ForgeMod;
+import net.salju.jewelcraft.init.JewelryEnchantments;
+import net.minecraftforge.common.ForgeMod;
 
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
@@ -30,13 +27,12 @@ import net.minecraft.resources.ResourceLocation;
 
 import java.util.UUID;
 import java.util.List;
-
-import com.google.common.collect.Multimap;
+import com.google.common.collect.Multimap;
 import com.google.common.collect.HashMultimap;
 
 public class AmuletItem extends JewelryItem {
 	public AmuletItem() {
-		super(new Item.Properties().tab(JewelryTabs.JEWELCRAFT_TAB).stacksTo(1).rarity(Rarity.COMMON));
+		super(new Item.Properties().stacksTo(1).rarity(Rarity.COMMON));
 	}
 
 	@Override
@@ -53,7 +49,7 @@ public class AmuletItem extends JewelryItem {
 			stats.put(ForgeMod.SWIM_SPEED.get(), new AttributeModifier(UUID.fromString("f7be8916-b85c-11ed-afa1-0242ac120002"), "S-Swim-A", 0.85F, AttributeModifier.Operation.MULTIPLY_TOTAL));
 		if (EnchantmentHelper.getItemEnchantmentLevel(JewelryEnchantments.ALEXANDRITE.get(), stack) != 0) {
 			stats.put(ForgeMod.STEP_HEIGHT_ADDITION.get(), new AttributeModifier(UUID.fromString("1fbdd7e8-ba09-11ed-afa1-0242ac120002"), "S-StepUp-A", 0.5, AttributeModifier.Operation.ADDITION));
-			stats.put(ForgeMod.REACH_DISTANCE.get(), new AttributeModifier(UUID.fromString("19260e62-b85d-11ed-afa1-0242ac120002"), "S-Reach-A", 2.5, AttributeModifier.Operation.ADDITION));
+			stats.put(ForgeMod.BLOCK_REACH.get(), new AttributeModifier(UUID.fromString("19260e62-b85d-11ed-afa1-0242ac120002"), "S-Reach-A", 2.5, AttributeModifier.Operation.ADDITION));
 		}
 		return stats;
 	}

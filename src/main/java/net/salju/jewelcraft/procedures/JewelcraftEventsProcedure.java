@@ -40,6 +40,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.Mth;
@@ -91,7 +92,7 @@ public class JewelcraftEventsProcedure {
 		if (event != null && event.getEntity() != null && event.getSource() != null) {
 			LivingEntity target = event.getEntity();
 			DamageSource source = event.getSource();
-			if (target instanceof Player player && !(source.isBypassInvul())) {
+			if (target instanceof Player player && !source.is(DamageTypes.OUT_OF_WORLD)) {
 				if (player.getInventory().contains(new ItemStack(Items.TOTEM_OF_UNDYING))) {
 					ItemStack totem = new ItemStack(Items.TOTEM_OF_UNDYING);
 					ItemStack amulet = JewelcraftEventsProcedure.getAmulet(player);

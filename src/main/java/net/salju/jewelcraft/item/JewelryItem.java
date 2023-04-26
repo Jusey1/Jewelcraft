@@ -5,7 +5,6 @@ import top.theillusivec4.curios.api.type.capability.ICurio.DropRule;
 import top.theillusivec4.curios.api.SlotContext;
 
 import net.minecraft.world.level.Level;
-import net.minecraft.world.item.Wearable;
 import net.minecraft.world.item.Vanishable;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.ItemStack;
@@ -18,7 +17,7 @@ import net.minecraft.ChatFormatting;
 
 import java.util.List;
 
-public class JewelryItem extends Item implements ICurioItem, Vanishable, Wearable {
+public class JewelryItem extends Item implements ICurioItem, Vanishable {
 	public JewelryItem(Item.Properties props) {
 		super(props);
 	}

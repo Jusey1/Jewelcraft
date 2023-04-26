@@ -1,11 +1,8 @@
 package net.salju.jewelcraft.item;
 
 import top.theillusivec4.curios.api.SlotContext;
-
-import net.salju.jewelcraft.init.JewelryTabs;
-import net.salju.jewelcraft.init.JewelryEnchantments;
-
-import net.minecraftforge.common.ForgeMod;
+import net.salju.jewelcraft.init.JewelryEnchantments;
+import net.minecraftforge.common.ForgeMod;
 
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
@@ -22,13 +19,12 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.UUID;
-
-import com.google.common.collect.Multimap;
+import com.google.common.collect.Multimap;
 import com.google.common.collect.HashMultimap;
 
 public class RingItem extends JewelryItem {
 	public RingItem() {
-		super(new Item.Properties().tab(JewelryTabs.JEWELCRAFT_TAB).stacksTo(1).rarity(Rarity.COMMON));
+		super(new Item.Properties().stacksTo(1).rarity(Rarity.COMMON));
 	}
 
 	@Override
@@ -44,7 +40,7 @@ public class RingItem extends JewelryItem {
 		if (EnchantmentHelper.getItemEnchantmentLevel(JewelryEnchantments.INFUSED.get(), stack) != 0)
 			stats.put(Attributes.ATTACK_SPEED, new AttributeModifier(UUID.fromString("3dd24214-ba09-11ed-afa1-0242ac120002"), "S-AtkSpeed-R", 0.25F, AttributeModifier.Operation.MULTIPLY_TOTAL));
 		if (EnchantmentHelper.getItemEnchantmentLevel(JewelryEnchantments.ALEXANDRITE.get(), stack) != 0) {
-			stats.put(ForgeMod.REACH_DISTANCE.get(), new AttributeModifier(UUID.fromString("159c3056-b96f-11ed-afa1-0242ac120002"), "S-Reach-R", 1.5, AttributeModifier.Operation.ADDITION));
+			stats.put(ForgeMod.BLOCK_REACH.get(), new AttributeModifier(UUID.fromString("159c3056-b96f-11ed-afa1-0242ac120002"), "S-Reach-R", 1.5, AttributeModifier.Operation.ADDITION));
 			stats.put(Attributes.MOVEMENT_SPEED, new AttributeModifier(UUID.fromString("0a2df15a-b96f-11ed-afa1-0242ac120002"), "S-Speed-R", 0.15F, AttributeModifier.Operation.MULTIPLY_TOTAL));
 		}
 		return stats;
