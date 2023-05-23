@@ -24,7 +24,7 @@ public class JewelcraftLootEventProcedure {
 					JewelcraftHelpersProcedure.getUnique(Items.BOOK, null, JewelryEnchantments.AQUAMARINE.get(), null));
 			table.addPool(unique);
 			event.setTable(table);
-		} else if (event.getName().equals(BuiltInLootTables.JUNGLE_TEMPLE)) {
+		} else if (event.getName().equals(BuiltInLootTables.JUNGLE_TEMPLE)) {
 			LootTable table = event.getTable();
 			LootPool unique = JewelcraftHelpersProcedure.setUnique("jungle_loot", -2.0F, 1.0F,
 					JewelcraftHelpersProcedure.getUnique(JewelryItems.COPPER_RING_ROSE.get(), "item.jewelcraft.sacrifice_ring", JewelryEnchantments.BLOODY.get(), JewelryEnchantments.ZOMBIE.get()),

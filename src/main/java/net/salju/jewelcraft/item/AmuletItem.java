@@ -86,11 +86,10 @@ public class AmuletItem extends JewelryItem {
 				}
 			}
 			if (EnchantmentHelper.getItemEnchantmentLevel(JewelryEnchantments.ZILLYAURA.get(), stack) != 0) {
-				List<LivingEntity> mobs = target.level.getEntitiesOfClass(LivingEntity.class, new AABB(x - 8, y - 1, z - 8, x + 8, y + 1, z + 8));
-				for (LivingEntity aura : mobs) {
-					if (aura instanceof Player || aura instanceof Animal || aura instanceof Villager) {
-						if (aura != target) {
-							aura.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 6, 0, (false), (false)));
+				for (LivingEntity aura : target.level.getEntitiesOfClass(LivingEntity.class, target.getBoundingBox().inflate(7.0D))) {
+					if (aura instanceof Animal || aura instanceof Villager) {
+						if (aura != target && !(aura.hasEffect(MobEffects.REGENERATION)) && (aura.getHealth() < aura.getMaxHealth())) {
+							aura.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 60, 1));
 						}
 					}
 				}
