@@ -62,7 +62,7 @@ public class AmuletItem extends JewelryItem {
 		double z = target.getZ();
 		if (target instanceof ServerPlayer player) {
 			if (EnchantmentHelper.getItemEnchantmentLevel(JewelryEnchantments.MAGNETIC.get(), stack) != 0 && target.isShiftKeyDown()) {
-				List<ItemEntity> items = target.level.getEntitiesOfClass(ItemEntity.class, new AABB(x - 16, y - 16, z - 16, x + 16, y + 16, z + 16));
+				List<ItemEntity> items = target.level().getEntitiesOfClass(ItemEntity.class, new AABB(x - 16, y - 16, z - 16, x + 16, y + 16, z + 16));
 				for (ItemEntity item : items)
 					if (this.canPullItem(item)) {
 						if (!this.canPickStack((Player) target, item.getItem())) {
@@ -86,7 +86,7 @@ public class AmuletItem extends JewelryItem {
 				}
 			}
 			if (EnchantmentHelper.getItemEnchantmentLevel(JewelryEnchantments.ZILLYAURA.get(), stack) != 0) {
-				for (LivingEntity aura : target.level.getEntitiesOfClass(LivingEntity.class, target.getBoundingBox().inflate(7.0D))) {
+				for (LivingEntity aura : target.level().getEntitiesOfClass(LivingEntity.class, target.getBoundingBox().inflate(7.0D))) {
 					if (aura instanceof Animal || aura instanceof Villager) {
 						if (aura != target && !(aura.hasEffect(MobEffects.REGENERATION)) && (aura.getHealth() < aura.getMaxHealth())) {
 							aura.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 60, 1));

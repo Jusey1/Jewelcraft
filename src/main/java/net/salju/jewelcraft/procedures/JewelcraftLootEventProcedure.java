@@ -19,7 +19,7 @@ public class JewelcraftLootEventProcedure {
 		if (event.getName().equals(BuiltInLootTables.SHIPWRECK_TREASURE)) {
 			LootTable table = event.getTable();
 			LootPool unique = JewelcraftHelpersProcedure.setUnique("captain_loot", -2.0F, 1.0F,
-					JewelcraftHelpersProcedure.getUnique(JewelryItems.IRON_AMULET_REDSTONE.get(), "item.jewelcraft.captain_amulet", JewelryEnchantments.AQUAMARINE.get(), JewelryEnchantments.MAGNETIC.get()),
+					JewelcraftHelpersProcedure.getUnique(JewelryItems.IRON_AMULET_LAPIS.get(), "item.jewelcraft.captain_amulet", JewelryEnchantments.AQUAMARINE.get(), JewelryEnchantments.MAGNETIC.get()),
 					JewelcraftHelpersProcedure.getUnique(JewelryItems.GOLDEN_RING_REDSTONE.get(), "item.jewelcraft.captain_ring", JewelryEnchantments.CRITICAL.get(), JewelryEnchantments.HELIODOR.get()),
 					JewelcraftHelpersProcedure.getUnique(Items.BOOK, null, JewelryEnchantments.AQUAMARINE.get(), null));
 			table.addPool(unique);
@@ -60,7 +60,7 @@ public class JewelcraftLootEventProcedure {
 		} else if (event.getName().equals(BuiltInLootTables.DESERT_PYRAMID)) {
 			LootTable table = event.getTable();
 			LootPool unique = JewelcraftHelpersProcedure.setUnique("desert_loot", -2.0F, 1.0F,
-					JewelcraftHelpersProcedure.getUnique(JewelryItems.COPPER_AMULET_AMETHYST.get(), "item.jewelcraft.desert_amulet", JewelryEnchantments.SATISFICATION.get(), JewelryEnchantments.MAGNETIC.get()),
+					JewelcraftHelpersProcedure.getUnique(JewelryItems.GOLDEN_AMULET_REDSTONE.get(), "item.jewelcraft.desert_amulet", JewelryEnchantments.SATISFICATION.get(), JewelryEnchantments.MAGNETIC.get()),
 					JewelcraftHelpersProcedure.getUnique(Items.BOOK, null, JewelryEnchantments.SATISFICATION.get(), null),
 					JewelcraftHelpersProcedure.getUnique(Items.BOOK, null, JewelryEnchantments.MAGNETIC.get(), null),
 					JewelcraftHelpersProcedure.getUnique(Items.BOOK, null, JewelryEnchantments.ALEXANDRITE.get(), null));

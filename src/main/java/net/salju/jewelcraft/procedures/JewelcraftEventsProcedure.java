@@ -66,7 +66,7 @@ public class JewelcraftEventsProcedure {
 			LivingEntity target = event.getEntity();
 			if (target instanceof Player player) {
 				ItemStack amulet = JewelcraftEventsProcedure.getAmulet(player);
-				Level world = player.level;
+				Level world = player.level();
 				if (!world.isClientSide) {
 					if (amulet != null) {
 						if (EnchantmentHelper.getItemEnchantmentLevel(JewelryEnchantments.DEFLECT.get(), amulet) != 0 && event.getSource().getDirectEntity() != null) {
@@ -97,7 +97,7 @@ public class JewelcraftEventsProcedure {
 		if (event != null && event.getEntity() != null && event.getSource() != null) {
 			LivingEntity target = event.getEntity();
 			DamageSource source = event.getSource();
-			if (target instanceof Player player && !source.is(DamageTypes.OUT_OF_WORLD)) {
+			if (target instanceof Player player && !source.is(DamageTypes.FELL_OUT_OF_WORLD)) {
 				if (player.getInventory().contains(new ItemStack(Items.TOTEM_OF_UNDYING))) {
 					ItemStack totem = new ItemStack(Items.TOTEM_OF_UNDYING);
 					ItemStack amulet = JewelcraftEventsProcedure.getAmulet(player);
@@ -111,7 +111,7 @@ public class JewelcraftEventsProcedure {
 							player.addEffect(new MobEffectInstance(MobEffects.HEAL, 1, 1));
 							player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 800, 0));
 							player.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 800, 0));
-							player.level.broadcastEntityEvent(player, (byte) 35);
+							player.level().broadcastEntityEvent(player, (byte) 35);
 							task = true;
 							event.setCanceled(true);
 						}
@@ -125,7 +125,7 @@ public class JewelcraftEventsProcedure {
 								player.addEffect(new MobEffectInstance(MobEffects.HEAL, 1, 0));
 								player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 600, 0));
 								player.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 600, 0));
-								player.level.broadcastEntityEvent(player, (byte) 35);
+								player.level().broadcastEntityEvent(player, (byte) 35);
 								task = true;
 								event.setCanceled(true);
 							}
@@ -195,7 +195,7 @@ public class JewelcraftEventsProcedure {
 					for (ItemStack ring : rings) {
 						if (EnchantmentHelper.getItemEnchantmentLevel(JewelryEnchantments.ZOMBIE.get(), ring) != 0 && (task == false)) {
 							if (direct instanceof LivingEntity bob && !(bob instanceof Zombie)) {
-								for (Zombie billy : player.level.getEntitiesOfClass(Zombie.class, player.getBoundingBox().inflate(32.0D))) {
+								for (Zombie billy : player.level().getEntitiesOfClass(Zombie.class, player.getBoundingBox().inflate(32.0D))) {
 									if (bob.isAlive() && !(billy instanceof ZombifiedPiglin)) {
 										billy.setTarget(bob);
 									}
@@ -271,7 +271,7 @@ public class JewelcraftEventsProcedure {
 							world.setBlock(pos, crops, 3);
 							world.levelEvent(1505, pos, 0);
 						} else if (crops.getBlock() instanceof BushBlock && !(crops.getBlock() instanceof CropBlock)) {
-							BoneMealItem.applyBonemeal(new ItemStack(Items.BONE_MEAL), player.level, pos, player);
+							BoneMealItem.applyBonemeal(new ItemStack(Items.BONE_MEAL), player.level(), pos, player);
 							world.levelEvent(1505, pos, 0);
 						}
 					}
@@ -285,7 +285,7 @@ public class JewelcraftEventsProcedure {
 								world.setBlock(upper, crops, 3);
 								world.levelEvent(1505, pos, 0);
 							} else if ((crops.getBlock() instanceof CropBlock blok && blok.canSurvive(crops, world, pos)) || (crops.getBlock() instanceof BambooStalkBlock) || (crops.getBlock() instanceof BambooSaplingBlock)) {
-								BoneMealItem.applyBonemeal(new ItemStack(Items.BONE_MEAL), player.level, pos, player);
+								BoneMealItem.applyBonemeal(new ItemStack(Items.BONE_MEAL), player.level(), pos, player);
 								world.levelEvent(1505, pos, 0);
 							}
 						}

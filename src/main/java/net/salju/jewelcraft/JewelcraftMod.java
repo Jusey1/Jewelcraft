@@ -18,6 +18,7 @@ public class JewelcraftMod {
 		IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 		JewelryItems.REGISTRY.register(bus);
 		JewelryEnchantments.REGISTRY.register(bus);
+		JewelryTabs.REGISTRY.register(bus);
 		looter = new JewelcraftLootEventProcedure();
 		MinecraftForge.EVENT_BUS.register(looter);
 	}
