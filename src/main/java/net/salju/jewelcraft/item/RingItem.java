@@ -2,10 +2,10 @@ package net.salju.jewelcraft.item;
 
 import top.theillusivec4.curios.api.SlotContext;
 import net.salju.jewelcraft.init.JewelryEnchantments;
+import net.salju.jewelcraft.events.JewelcraftHelpers;
 import net.minecraftforge.common.ForgeMod;
 
 import net.minecraft.world.level.storage.loot.LootContext;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Item;
@@ -23,8 +23,8 @@ import java.util.UUID;
 import com.google.common.collect.HashMultimap;
 
 public class RingItem extends JewelryItem {
-	public RingItem() {
-		super(new Item.Properties().stacksTo(1).rarity(Rarity.COMMON));
+	public RingItem(int value) {
+		super(new Item.Properties().stacksTo(1).rarity(Rarity.COMMON), value);
 	}
 
 	@Override
@@ -35,11 +35,11 @@ public class RingItem extends JewelryItem {
 			stats.put(Attributes.KNOCKBACK_RESISTANCE, new AttributeModifier(UUID.fromString("7bbafa58-fcf0-4878-a5c5-85c7904b8fa9"), "S-KB-R", 0.1, AttributeModifier.Operation.ADDITION));
 		if (stack.is(ItemTags.create(new ResourceLocation("jewelcraft:is_iron"))))
 			stats.put(Attributes.ARMOR_TOUGHNESS, new AttributeModifier(UUID.fromString("dff4f294-b96e-11ed-afa1-0242ac120002"), "S-Armor-R", 1.0, AttributeModifier.Operation.ADDITION));
-		if (EnchantmentHelper.getItemEnchantmentLevel(JewelryEnchantments.HELIODOR.get(), stack) != 0)
+		if (JewelcraftHelpers.hasEnchantment(JewelryEnchantments.HELIODOR.get(), stack))
 			stats.put(Attributes.LUCK, new AttributeModifier(UUID.fromString("36696d7a-ba0b-11ed-afa1-0242ac120002"), "S-Luck-R", 1.0, AttributeModifier.Operation.ADDITION));
-		if (EnchantmentHelper.getItemEnchantmentLevel(JewelryEnchantments.INFUSED.get(), stack) != 0)
+		if (JewelcraftHelpers.hasEnchantment(JewelryEnchantments.INFUSED.get(), stack))
 			stats.put(Attributes.ATTACK_SPEED, new AttributeModifier(UUID.fromString("3dd24214-ba09-11ed-afa1-0242ac120002"), "S-AtkSpeed-R", 0.25F, AttributeModifier.Operation.MULTIPLY_TOTAL));
-		if (EnchantmentHelper.getItemEnchantmentLevel(JewelryEnchantments.ALEXANDRITE.get(), stack) != 0) {
+		if (JewelcraftHelpers.hasEnchantment(JewelryEnchantments.ALEXANDRITE.get(), stack)) {
 			stats.put(ForgeMod.BLOCK_REACH.get(), new AttributeModifier(UUID.fromString("159c3056-b96f-11ed-afa1-0242ac120002"), "S-Reach-R", 1.5, AttributeModifier.Operation.ADDITION));
 			stats.put(Attributes.MOVEMENT_SPEED, new AttributeModifier(UUID.fromString("0a2df15a-b96f-11ed-afa1-0242ac120002"), "S-Speed-R", 0.15F, AttributeModifier.Operation.MULTIPLY_TOTAL));
 		}
@@ -50,8 +50,8 @@ public class RingItem extends JewelryItem {
 	public void curioTick(SlotContext slot, ItemStack stack) {
 		LivingEntity target = slot.entity();
 		if (target instanceof ServerPlayer player) {
-			if (EnchantmentHelper.getItemEnchantmentLevel(JewelryEnchantments.BLOODY.get(), stack) != 0) {
-				player.getAttributes().addTransientAttributeModifiers(this.createBloody(player));
+			if (JewelcraftHelpers.hasEnchantment(JewelryEnchantments.BLOODY.get(), stack)) {
+				player.getAttributes().addTransientAttributeModifiers(createBloody(player));
 			}
 		}
 	}
@@ -60,13 +60,13 @@ public class RingItem extends JewelryItem {
 	public void onUnequip(SlotContext slot, ItemStack newbie, ItemStack stack) {
 		LivingEntity target = slot.entity();
 		if (target instanceof ServerPlayer player) {
-			player.getAttributes().removeAttributeModifiers(this.createBloody(player));
+			player.getAttributes().removeAttributeModifiers(createBloody(player));
 		}
 	}
 
 	@Override
 	public int getFortuneLevel(SlotContext slot, LootContext loot, ItemStack stack) {
-		if (EnchantmentHelper.getItemEnchantmentLevel(JewelryEnchantments.HELIODOR.get(), stack) != 0)
+		if (JewelcraftHelpers.hasEnchantment(JewelryEnchantments.HELIODOR.get(), stack))
 			return super.getFortuneLevel(slot, loot, stack) + 1;
 		return super.getFortuneLevel(slot, loot, stack);
 	}
@@ -91,7 +91,7 @@ public class RingItem extends JewelryItem {
 
 	private Multimap<Attribute, AttributeModifier> createBloody(Player target) {
 		Multimap<Attribute, AttributeModifier> stats = HashMultimap.create();
-		stats.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(UUID.fromString("2a041a44-fa84-499b-937e-e20474f6c623"), "S-DPS-R", this.getDamage(target), AttributeModifier.Operation.MULTIPLY_TOTAL));
+		stats.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(UUID.fromString("2a041a44-fa84-499b-937e-e20474f6c623"), "S-DPS-R", getDamage(target), AttributeModifier.Operation.MULTIPLY_TOTAL));
 		return stats;
 	}
 }

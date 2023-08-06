@@ -42,7 +42,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.monster.ZombifiedPiglin;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -69,7 +68,7 @@ public class JewelcraftEvents {
 				Level world = player.level();
 				if (!world.isClientSide) {
 					if (amulet != null) {
-						if (EnchantmentHelper.getItemEnchantmentLevel(JewelryEnchantments.DEFLECT.get(), amulet) != 0 && event.getSource().getDirectEntity() != null) {
+						if (JewelcraftHelpers.hasEnchantment(JewelryEnchantments.DEFLECT.get(), amulet) && event.getSource().getDirectEntity() != null) {
 							Entity direct = event.getSource().getDirectEntity();
 							if (direct instanceof AbstractArrow arrow && !(player.isBlocking())) {
 								if ((arrow.getOwner() instanceof Player && Math.random() <= 0.2) || (!(arrow.getOwner() instanceof Player) && Math.random() <= 0.65)) {
@@ -102,23 +101,18 @@ public class JewelcraftEvents {
 					ItemStack totem = new ItemStack(Items.TOTEM_OF_UNDYING);
 					ItemStack amulet = getAmulet(player);
 					List<ItemStack> rings = getRings(player);
-					boolean task = false;
-					if (amulet != null) {
-						if (EnchantmentHelper.getItemEnchantmentLevel(JewelryEnchantments.TOTEM.get(), amulet) != 0) {
-							player.getInventory().clearOrCountMatchingItems(p -> totem.getItem() == p.getItem(), 1, player.inventoryMenu.getCraftSlots());
-							player.setHealth(1.0F);
-							player.removeAllEffects();
-							player.addEffect(new MobEffectInstance(MobEffects.HEAL, 1, 1));
-							player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 800, 0));
-							player.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 800, 0));
-							player.level().broadcastEntityEvent(player, (byte) 35);
-							task = true;
-							event.setCanceled(true);
-						}
-					}
-					if (rings.size() > 0) {
+					if (amulet != null && JewelcraftHelpers.hasEnchantment(JewelryEnchantments.TOTEM.get(), amulet)) {
+						player.getInventory().clearOrCountMatchingItems(p -> totem.getItem() == p.getItem(), 1, player.inventoryMenu.getCraftSlots());
+						player.setHealth(1.0F);
+						player.removeAllEffects();
+						player.addEffect(new MobEffectInstance(MobEffects.HEAL, 1, 1));
+						player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 800, 0));
+						player.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 800, 0));
+						player.level().broadcastEntityEvent(player, (byte) 35);
+						event.setCanceled(true);
+					} else if (rings.size() > 0) {
 						for (ItemStack ring : rings) {
-							if (EnchantmentHelper.getItemEnchantmentLevel(JewelryEnchantments.TOTEM.get(), ring) != 0 && (task == false)) {
+							if (JewelcraftHelpers.hasEnchantment(JewelryEnchantments.TOTEM.get(), ring)) {
 								player.getInventory().clearOrCountMatchingItems(p -> totem.getItem() == p.getItem(), 1, player.inventoryMenu.getCraftSlots());
 								player.setHealth(1.0F);
 								player.removeAllEffects();
@@ -126,8 +120,8 @@ public class JewelcraftEvents {
 								player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 600, 0));
 								player.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 600, 0));
 								player.level().broadcastEntityEvent(player, (byte) 35);
-								task = true;
 								event.setCanceled(true);
+								break;
 							}
 						}
 					}
@@ -143,8 +137,8 @@ public class JewelcraftEvents {
 			int xp = event.getDroppedExperience();
 			ItemStack amulet = getAmulet(player);
 			if (amulet != null) {
-				if (EnchantmentHelper.getItemEnchantmentLevel(JewelryEnchantments.KYANITE.get(), amulet) != 0) {
-					event.setDroppedExperience(xp * 5);
+				if (JewelcraftHelpers.hasEnchantment(JewelryEnchantments.KYANITE.get(), amulet)) {
+					event.setDroppedExperience(xp * 2);
 				}
 			}
 		}
@@ -155,13 +149,17 @@ public class JewelcraftEvents {
 		if (event != null && event.getEntity() != null && event.getItemStack() != null) {
 			Player player = event.getEntity();
 			ItemStack book = event.getItemStack();
-			ItemStack item = player.getOffhandItem();
+			ItemStack item = null;
 			List<ItemStack> rings = getRings(player);
-			boolean task = false;
-			if (book.getItem() == Items.BOOK && book != item && item.isEnchanted()) {
-				if (rings.size() > 0) {
+			if (book.getItem() == Items.BOOK) {
+				if (player.getMainHandItem() == book) {
+					item = player.getOffhandItem();
+				} else {
+					item = player.getMainHandItem();
+				}
+				if (rings.size() > 0 && item.isEnchanted()) {
 					for (ItemStack ring : rings) {
-						if (EnchantmentHelper.getItemEnchantmentLevel(JewelryEnchantments.KYANITE.get(), ring) != 0 && (task == false)) {
+						if (JewelcraftHelpers.hasEnchantment(JewelryEnchantments.KYANITE.get(), ring)) {
 							if (player.experienceLevel > 5 || player.getAbilities().instabuild) {
 								if (!player.getAbilities().instabuild)
 									player.giveExperienceLevels(-5);
@@ -169,13 +167,13 @@ public class JewelcraftEvents {
 								ItemStack newbie = new ItemStack(Items.ENCHANTED_BOOK);
 								EnchantmentHelper.setEnchantments(EnchantmentHelper.getEnchantments(item), newbie);
 								player.playSound(SoundEvents.ITEM_BREAK, 1.0F, 1.0F);
-								player.setItemSlot(EquipmentSlot.OFFHAND, ItemStack.EMPTY);
 								ItemHandlerHelper.giveItemToPlayer(player, newbie);
+								item.shrink(1);
 								book.shrink(1);
 							} else {
 								player.displayClientMessage(Component.translatable("desc.jewelcraft.kyanite_xp"), (true));
 							}
-							task = true;
+							break;
 						}
 					}
 				}
@@ -190,17 +188,16 @@ public class JewelcraftEvents {
 			Entity direct = event.getDamageSource().getDirectEntity();
 			if (target instanceof Player player) {
 				List<ItemStack> rings = getRings(player);
-				boolean task = false;
 				if (rings.size() > 0) {
 					for (ItemStack ring : rings) {
-						if (EnchantmentHelper.getItemEnchantmentLevel(JewelryEnchantments.ZOMBIE.get(), ring) != 0 && (task == false)) {
+						if (JewelcraftHelpers.hasEnchantment(JewelryEnchantments.ZOMBIE.get(), ring)) {
 							if (direct instanceof LivingEntity bob && !(bob instanceof Zombie)) {
 								for (Zombie billy : player.level().getEntitiesOfClass(Zombie.class, player.getBoundingBox().inflate(32.0D))) {
 									if (bob.isAlive() && !(billy instanceof ZombifiedPiglin)) {
 										billy.setTarget(bob);
 									}
 								}
-								task = true;
+								break;
 							}
 						}
 					}
@@ -217,9 +214,8 @@ public class JewelcraftEvents {
 			if (target instanceof Player player) {
 				ItemStack amulet = getAmulet(player);
 				List<ItemStack> rings = getRings(player);
-				boolean task = false;
 				if (amulet != null) {
-					if (EnchantmentHelper.getItemEnchantmentLevel(JewelryEnchantments.RAINBOW.get(), amulet) != 0) {
+					if (JewelcraftHelpers.hasEnchantment(JewelryEnchantments.RAINBOW.get(), amulet)) {
 						if (potion.getEffect() == MobEffects.POISON) {
 							player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, potion.getDuration(), potion.getAmplifier()));
 							event.setResult(Result.DENY);
@@ -231,7 +227,7 @@ public class JewelcraftEvents {
 							event.setResult(Result.DENY);
 						}
 					}
-					if (EnchantmentHelper.getItemEnchantmentLevel(JewelryEnchantments.SATISFICATION.get(), amulet) != 0) {
+					if (JewelcraftHelpers.hasEnchantment(JewelryEnchantments.SATISFICATION.get(), amulet)) {
 						if (potion.getEffect() == MobEffects.HUNGER) {
 							event.setResult(Result.DENY);
 						}
@@ -239,7 +235,7 @@ public class JewelcraftEvents {
 				}
 				if (rings.size() > 0) {
 					for (ItemStack ring : rings) {
-						if (EnchantmentHelper.getItemEnchantmentLevel(JewelryEnchantments.RAINBOW.get(), ring) != 0 && (task == false)) {
+						if (JewelcraftHelpers.hasEnchantment(JewelryEnchantments.RAINBOW.get(), ring)) {
 							if (potion.getEffect() == MobEffects.WEAKNESS) {
 								player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, potion.getDuration(), potion.getAmplifier()));
 								event.setResult(Result.DENY);
@@ -247,7 +243,7 @@ public class JewelcraftEvents {
 								player.addEffect(new MobEffectInstance(MobEffects.DIG_SPEED, potion.getDuration(), potion.getAmplifier()));
 								event.setResult(Result.DENY);
 							}
-							task = true;
+							break;
 						}
 					}
 				}
@@ -261,12 +257,11 @@ public class JewelcraftEvents {
 			BlockState crops = event.getState();
 			BlockPos pos = event.getPos();
 			LevelAccessor world = event.getLevel();
-			boolean task = false;
 			for (Player player : world.getEntitiesOfClass(Player.class, AABB.ofSize(new Vec3(pos.getX(), pos.getY(), pos.getZ()), 8, 2, 8))) {
 				ItemStack amulet = getAmulet(player);
 				List<ItemStack> rings = getRings(player);
 				if (amulet != null) {
-					if (EnchantmentHelper.getItemEnchantmentLevel(JewelryEnchantments.SODALITE.get(), amulet) != 0) {
+					if (JewelcraftHelpers.hasEnchantment(JewelryEnchantments.SODALITE.get(), amulet)) {
 						if (crops.getBlock() instanceof CactusBlock && world.isEmptyBlock(pos)) {
 							world.setBlock(pos, crops, 3);
 							world.levelEvent(1505, pos, 0);
@@ -278,9 +273,8 @@ public class JewelcraftEvents {
 				}
 				if (rings.size() > 0) {
 					for (ItemStack ring : rings) {
-						if (EnchantmentHelper.getItemEnchantmentLevel(JewelryEnchantments.SODALITE.get(), ring) != 0 && (task == false)) {
+						if (JewelcraftHelpers.hasEnchantment(JewelryEnchantments.SODALITE.get(), ring)) {
 							BlockPos upper = new BlockPos(pos.getX(), pos.getY() + 1, pos.getZ());
-							task = true;
 							if (crops.getBlock() instanceof SugarCaneBlock && world.isEmptyBlock(upper)) {
 								world.setBlock(upper, crops, 3);
 								world.levelEvent(1505, pos, 0);
@@ -288,6 +282,7 @@ public class JewelcraftEvents {
 								BoneMealItem.applyBonemeal(new ItemStack(Items.BONE_MEAL), player.level(), pos, player);
 								world.levelEvent(1505, pos, 0);
 							}
+							break;
 						}
 					}
 				}
@@ -299,20 +294,14 @@ public class JewelcraftEvents {
 	public static void onTramply(BlockEvent.FarmlandTrampleEvent event) {
 		if (event != null && event.getEntity() != null) {
 			Entity target = event.getEntity();
-			boolean task = false;
 			if (target instanceof Player player) {
 				ItemStack amulet = getAmulet(player);
 				List<ItemStack> rings = getRings(player);
-				if (amulet != null) {
-					if (EnchantmentHelper.getItemEnchantmentLevel(JewelryEnchantments.SODALITE.get(), amulet) != 0 && (task == false)) {
-						task = true;
-						event.setCanceled(true);
-					}
-				}
-				if (rings.size() > 0) {
+				if (amulet != null && JewelcraftHelpers.hasEnchantment(JewelryEnchantments.SODALITE.get(), amulet)) {
+					event.setCanceled(true);
+				} else if (rings.size() > 0) {
 					for (ItemStack ring : rings) {
-						if (EnchantmentHelper.getItemEnchantmentLevel(JewelryEnchantments.SODALITE.get(), ring) != 0 && (task == false)) {
-							task = true;
+						if (JewelcraftHelpers.hasEnchantment(JewelryEnchantments.SODALITE.get(), ring)) {
 							event.setCanceled(true);
 						}
 					}
@@ -326,15 +315,14 @@ public class JewelcraftEvents {
 		if (event != null && event.getEntity() != null) {
 			Player player = event.getEntity();
 			List<ItemStack> rings = getRings(player);
-			boolean task = false;
 			if (rings.size() > 0) {
 				for (ItemStack ring : rings) {
-					if (EnchantmentHelper.getItemEnchantmentLevel(JewelryEnchantments.CRITICAL.get(), ring) != 0 && (task == false)) {
+					if (JewelcraftHelpers.hasEnchantment(JewelryEnchantments.CRITICAL.get(), ring)) {
 						if (Math.random() <= 0.15 && !(event.isVanillaCritical())) {
 							event.setResult(Result.ALLOW);
 						}
 						event.setDamageModifier(event.getDamageModifier() + 0.25F);
-						task = true;
+						break;
 					}
 				}
 			}

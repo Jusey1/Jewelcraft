@@ -18,8 +18,11 @@ import net.minecraft.ChatFormatting;
 import java.util.List;
 
 public class JewelryItem extends Item implements ICurioItem, Vanishable {
-	public JewelryItem(Item.Properties props) {
+	private final int ench;
+	
+	public JewelryItem(Item.Properties props, int value) {
 		super(props);
+		this.ench = value;
 	}
 
 	@Override
@@ -36,7 +39,7 @@ public class JewelryItem extends Item implements ICurioItem, Vanishable {
 
 	@Override
 	public int getEnchantmentValue() {
-		return 1;
+		return ench;
 	}
 
 	@Override
@@ -55,4 +58,4 @@ public class JewelryItem extends Item implements ICurioItem, Vanishable {
 	public boolean makesPiglinsNeutral(SlotContext slot, ItemStack stack) {
 		return (stack.is(ItemTags.create(new ResourceLocation("jewelcraft:is_gold"))));
 	}
-}
+}

@@ -8,25 +8,26 @@ import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Item;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.Component;
 
 import javax.annotation.Nullable;
-
-import java.util.List;
+import java.util.List;
 import java.util.ArrayList;
 
 public class JewelcraftHelpers {
 	public static LootPoolSingletonContainer.Builder<?> getUnique(Item gem, @Nullable String name, Enchantment one, @Nullable Enchantment two) {
 		LootPoolSingletonContainer.Builder<?> stack = LootItem.lootTableItem(gem);
 		stack.setWeight(7);
-		if (name != null) {
+		if (name != null) {
 			stack.apply(SetNameFunction.setName(Component.translatable(name)));
 		}
 		stack.apply(enchantItem().withEnchantment(one, UniformGenerator.between(1.0F, 1.0F)));
-		if (two != null) {
+		if (two != null) {
 			stack.apply(enchantItem().withEnchantment(two, UniformGenerator.between(1.0F, 1.0F)));
 		}
 		return stack;
@@ -34,6 +35,10 @@ public class JewelcraftHelpers {
 
 	public static SetEnchantmentsFunction.Builder enchantItem() {
 		return new SetEnchantmentsFunction.Builder();
+	}
+
+	public static boolean hasEnchantment(Enchantment ench, ItemStack stack) {
+		return EnchantmentHelper.getItemEnchantmentLevel(ench, stack) != 0;
 	}
 
 	public static LootPool setUnique(String name, float low, float max, @Nullable LootPoolEntryContainer.Builder<?>... targets) {

@@ -8,8 +8,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.entity.EquipmentSlot;
 
 public class AmuletEnchantment extends Enchantment {
-	public AmuletEnchantment(EquipmentSlot... slots) {
-		super(Enchantment.Rarity.RARE, EnchantmentCategory.WEARABLE, slots);
+	private final int min;
+	
+	public AmuletEnchantment(Enchantment.Rarity rare, int xp) {
+		super(rare, EnchantmentCategory.WEARABLE, new EquipmentSlot[]{EquipmentSlot.MAINHAND});
+		this.min = xp;
 	}
 
 	@Override
@@ -24,11 +27,16 @@ public class AmuletEnchantment extends Enchantment {
 
 	@Override
 	public int getMinCost(int i) {
-		return 1 + (i * 10);
+		return min + (i - 1) * 10;
 	}
 
 	@Override
 	public int getMaxCost(int i) {
-		return this.getMinCost(i) + 76;
+		return this.getMinCost(i) + 32;
+	}
+
+	@Override
+	public boolean isAllowedOnBooks() {
+		return false;
 	}
 }
