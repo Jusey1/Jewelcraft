@@ -306,10 +306,16 @@ public class JewelcraftEvents {
 			if (rings.size() > 0) {
 				for (ItemStack ring : rings) {
 					if (JewelcraftHelpers.hasEnchantment(JewelryEnchantments.CRITICAL.get(), ring)) {
-						if (Math.random() <= 0.15 && !(event.isVanillaCritical()) && JewelryConfig.RNGCRIT.get()) {
+						if (Math.random() <= ((double) JewelryConfig.CRITCHAN.get() / 100) && !(event.isVanillaCritical()) && JewelryConfig.RNGCRIT.get()) {
 							event.setResult(Result.ALLOW);
+							event.setDamageModifier(event.getDamageModifier() + ((float) JewelryConfig.CRITRNG.get() / 100));
+						} else if (event.isVanillaCritical()) {
+							if (!JewelryConfig.VANCRIT.get()) {
+								event.setResult(Result.DENY);
+							} else {
+								event.setDamageModifier(event.getDamageModifier() + ((float) JewelryConfig.CRIT.get() / 100));
+							}
 						}
-						event.setDamageModifier(event.getDamageModifier() + ((float) JewelryConfig.CRIT.get() / 100));
 						break;
 					}
 				}

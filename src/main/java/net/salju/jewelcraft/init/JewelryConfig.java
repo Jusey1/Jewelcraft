@@ -23,7 +23,10 @@ public class JewelryConfig {
 	public static final ForgeConfigSpec.DoubleValue MAGN;
 	public static final ForgeConfigSpec.IntValue FOOD;
 	public static final ForgeConfigSpec.IntValue CRIT;
+	public static final ForgeConfigSpec.IntValue CRITRNG;
+	public static final ForgeConfigSpec.IntValue CRITCHAN;
 	public static final ForgeConfigSpec.BooleanValue RNGCRIT;
+	public static final ForgeConfigSpec.BooleanValue VANCRIT;
 	
 	static {
 		BUILDER.push("Jewelry");
@@ -45,8 +48,11 @@ public class JewelryConfig {
 		BUILDER.push("Enchantment Abilities");
 		MAGN = BUILDER.comment("Magnetic's range for teleporting items to the player").defineInRange("Magnetic", 16.0, 0.0, Double.MAX_VALUE);
 		FOOD = BUILDER.comment("Satisfication's minimum hunger amount for the player").defineInRange("Never Go Hungry", 12, 0, 16);
-		CRIT = BUILDER.comment("Empowered's Critical Damage Bonus as a percentage").defineInRange("Critical", 25, 0, Integer.MAX_VALUE);
+		CRIT = BUILDER.comment("Empowered's Vanilla Critical Damage Bonus as a percentage").defineInRange("Critical", 25, 0, Integer.MAX_VALUE);
+		CRITRNG = BUILDER.comment("Empowered's Random Critical Damage Bonus as a percentage").defineInRange("Random Critical", 25, 0, Integer.MAX_VALUE);
+		CRITCHAN = BUILDER.comment("Empowered's Random Critical Chance as a percentage").defineInRange("Random Chance", 15, 0, 100);
 		RNGCRIT = BUILDER.comment("Should Empowered allow random critical hits?").define("Fair & Balanced", true);
+		VANCRIT = BUILDER.comment("Should Empowered allow vanilla critical hits?").define("Bonk!", true);
 		BUILDER.pop();
 		CONFIG = BUILDER.build();
 	}
