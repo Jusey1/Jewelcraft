@@ -1,10 +1,12 @@
 package net.salju.jewelcraft;
 
-import net.salju.jewelcraft.events.*;
 import net.salju.jewelcraft.init.*;
+import net.salju.jewelcraft.events.JewelcraftLoot;
 
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -19,5 +21,6 @@ public class JewelcraftMod {
 		JewelryItems.REGISTRY.register(bus);
 		JewelryEnchantments.REGISTRY.register(bus);
 		JewelryTabs.REGISTRY.register(bus);
+		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, JewelryConfig.CONFIG, "jewelry-common.toml");
 	}
 }

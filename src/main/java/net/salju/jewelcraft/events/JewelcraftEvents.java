@@ -7,6 +7,7 @@ import top.theillusivec4.curios.api.CuriosApi;
 import net.salju.jewelcraft.item.RingItem;
 import net.salju.jewelcraft.item.AmuletItem;
 import net.salju.jewelcraft.init.JewelryEnchantments;
+import net.salju.jewelcraft.init.JewelryConfig;
 
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.fml.common.Mod;
@@ -17,7 +18,6 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.CriticalHitEvent;
 import net.minecraftforge.event.entity.living.ShieldBlockEvent;
 import net.minecraftforge.event.entity.living.MobEffectEvent;
-import net.minecraftforge.event.entity.living.LivingExperienceDropEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 
@@ -54,7 +54,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.core.BlockPos;
 
 import javax.annotation.Nullable;
-import java.util.List;
+
+import java.util.List;
 import java.util.ArrayList;
 
 @Mod.EventBusSubscriber
@@ -73,8 +74,8 @@ public class JewelcraftEvents {
 							if (direct instanceof AbstractArrow arrow && !(player.isBlocking())) {
 								if ((arrow.getOwner() instanceof Player && Math.random() <= 0.2) || (!(arrow.getOwner() instanceof Player) && Math.random() <= 0.65)) {
 									event.setCanceled(true);
-									float x = ((float) Mth.nextDouble(RandomSource.create(), 175, 185));
-									float y = ((float) Mth.nextDouble(RandomSource.create(), -8, 8));
+									float x = (Mth.nextFloat(RandomSource.create(), 175.0F, 185.0F));
+									float y = (Mth.nextFloat(RandomSource.create(), -8.0F, 8.0F));
 									ArrowItem item = (ArrowItem) (Items.ARROW);
 									ItemStack stack = new ItemStack(Items.ARROW);
 									AbstractArrow newbie = item.createArrow(world, stack, player);
@@ -131,20 +132,6 @@ public class JewelcraftEvents {
 	}
 
 	@SubscribeEvent
-	public static void onLivingDropXp(LivingExperienceDropEvent event) {
-		if (event != null && event.getEntity() != null && event.getAttackingPlayer() != null) {
-			Player player = event.getAttackingPlayer();
-			int xp = event.getDroppedExperience();
-			ItemStack amulet = getAmulet(player);
-			if (amulet != null) {
-				if (JewelcraftHelpers.hasEnchantment(JewelryEnchantments.KYANITE.get(), amulet)) {
-					event.setDroppedExperience(xp * 2);
-				}
-			}
-		}
-	}
-
-	@SubscribeEvent
 	public static void onRightClickItem(PlayerInteractEvent.RightClickItem event) {
 		if (event != null && event.getEntity() != null && event.getItemStack() != null) {
 			Player player = event.getEntity();
@@ -160,9 +147,10 @@ public class JewelcraftEvents {
 				if (rings.size() > 0 && item.isEnchanted()) {
 					for (ItemStack ring : rings) {
 						if (JewelcraftHelpers.hasEnchantment(JewelryEnchantments.KYANITE.get(), ring)) {
-							if (player.experienceLevel > 5 || player.getAbilities().instabuild) {
-								if (!player.getAbilities().instabuild)
+							if (player.experienceLevel > 5 || player.isCreative()) {
+								if (!player.isCreative()) {
 									player.giveExperienceLevels(-5);
+								}
 								player.playSound(SoundEvents.ENCHANTMENT_TABLE_USE, 1.0F, 1.0F);
 								ItemStack newbie = new ItemStack(Items.ENCHANTED_BOOK);
 								EnchantmentHelper.setEnchantments(EnchantmentHelper.getEnchantments(item), newbie);
@@ -318,10 +306,10 @@ public class JewelcraftEvents {
 			if (rings.size() > 0) {
 				for (ItemStack ring : rings) {
 					if (JewelcraftHelpers.hasEnchantment(JewelryEnchantments.CRITICAL.get(), ring)) {
-						if (Math.random() <= 0.15 && !(event.isVanillaCritical())) {
+						if (Math.random() <= 0.15 && !(event.isVanillaCritical()) && JewelryConfig.RNGCRIT.get()) {
 							event.setResult(Result.ALLOW);
 						}
-						event.setDamageModifier(event.getDamageModifier() + 0.25F);
+						event.setDamageModifier(event.getDamageModifier() + ((float) JewelryConfig.CRIT.get() / 100));
 						break;
 					}
 				}

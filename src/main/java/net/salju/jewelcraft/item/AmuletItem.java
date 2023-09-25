@@ -1,6 +1,7 @@
 package net.salju.jewelcraft.item;
 
 import top.theillusivec4.curios.api.SlotContext;
+import net.salju.jewelcraft.init.JewelryConfig;
 import net.salju.jewelcraft.init.JewelryEnchantments;
 import net.salju.jewelcraft.events.JewelcraftHelpers;
 import net.minecraftforge.common.ForgeMod;
@@ -38,17 +39,17 @@ public class AmuletItem extends JewelryItem {
 	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(SlotContext slot, UUID id, ItemStack stack) {
 		LivingEntity target = slot.entity();
 		Multimap<Attribute, AttributeModifier> stats = HashMultimap.create();
-		if (stack.is(ItemTags.create(new ResourceLocation("jewelcraft:is_copper"))))
-			stats.put(Attributes.KNOCKBACK_RESISTANCE, new AttributeModifier(UUID.fromString("929c9214-b9f9-11ed-afa1-0242ac120002"), "S-KB-A", 0.1, AttributeModifier.Operation.ADDITION));
-		if (stack.is(ItemTags.create(new ResourceLocation("jewelcraft:is_iron"))))
-			stats.put(Attributes.ARMOR_TOUGHNESS, new AttributeModifier(UUID.fromString("5a1035e8-b7f8-11ed-afa1-0242ac120002"), "S-Armor-A", 1.0, AttributeModifier.Operation.ADDITION));
+		if (isCopper(stack))
+			stats.put(Attributes.KNOCKBACK_RESISTANCE, new AttributeModifier(UUID.fromString("929c9214-b9f9-11ed-afa1-0242ac120002"), "S-KB-A", JewelryConfig.COPPER.get(), AttributeModifier.Operation.ADDITION));
+		if (isIron(stack))
+			stats.put(Attributes.ARMOR_TOUGHNESS, new AttributeModifier(UUID.fromString("5a1035e8-b7f8-11ed-afa1-0242ac120002"), "S-Armor-A", JewelryConfig.IRON.get(), AttributeModifier.Operation.ADDITION));
 		if (JewelcraftHelpers.hasEnchantment(JewelryEnchantments.HELIODOR.get(), stack))
-			stats.put(Attributes.LUCK, new AttributeModifier(UUID.fromString("1f7c25ec-b9f9-11ed-afa1-0242ac120002"), "S-Luck-A", 1.0, AttributeModifier.Operation.ADDITION));
+			stats.put(Attributes.LUCK, new AttributeModifier(UUID.fromString("1f7c25ec-b9f9-11ed-afa1-0242ac120002"), "S-Luck-A", JewelryConfig.LUCK.get(), AttributeModifier.Operation.ADDITION));
 		if (JewelcraftHelpers.hasEnchantment(JewelryEnchantments.AQUAMARINE.get(), stack))
-			stats.put(ForgeMod.SWIM_SPEED.get(), new AttributeModifier(UUID.fromString("f7be8916-b85c-11ed-afa1-0242ac120002"), "S-Swim-A", 0.85F, AttributeModifier.Operation.MULTIPLY_TOTAL));
+			stats.put(ForgeMod.SWIM_SPEED.get(), new AttributeModifier(UUID.fromString("f7be8916-b85c-11ed-afa1-0242ac120002"), "S-Swim-A", ((float) JewelryConfig.SWMSPD.get() / 100), AttributeModifier.Operation.MULTIPLY_TOTAL));
 		if (JewelcraftHelpers.hasEnchantment(JewelryEnchantments.ALEXANDRITE.get(), stack)) {
-			stats.put(ForgeMod.STEP_HEIGHT_ADDITION.get(), new AttributeModifier(UUID.fromString("1fbdd7e8-ba09-11ed-afa1-0242ac120002"), "S-StepUp-A", 0.5, AttributeModifier.Operation.ADDITION));
-			stats.put(ForgeMod.BLOCK_REACH.get(), new AttributeModifier(UUID.fromString("19260e62-b85d-11ed-afa1-0242ac120002"), "S-Reach-A", 2.5, AttributeModifier.Operation.ADDITION));
+			stats.put(ForgeMod.STEP_HEIGHT_ADDITION.get(), new AttributeModifier(UUID.fromString("1fbdd7e8-ba09-11ed-afa1-0242ac120002"), "S-StepUp-A", JewelryConfig.STEP.get(), AttributeModifier.Operation.ADDITION));
+			stats.put(ForgeMod.BLOCK_REACH.get(), new AttributeModifier(UUID.fromString("19260e62-b85d-11ed-afa1-0242ac120002"), "S-Reach-A", JewelryConfig.REACH.get(), AttributeModifier.Operation.ADDITION));
 		}
 		return stats;
 	}
@@ -61,7 +62,7 @@ public class AmuletItem extends JewelryItem {
 		double z = target.getZ();
 		if (target instanceof ServerPlayer player) {
 			if (JewelcraftHelpers.hasEnchantment(JewelryEnchantments.MAGNETIC.get(), stack) && target.isShiftKeyDown()) {
-				List<ItemEntity> items = target.level().getEntitiesOfClass(ItemEntity.class, target.getBoundingBox().inflate(16.0D));
+				List<ItemEntity> items = target.level().getEntitiesOfClass(ItemEntity.class, target.getBoundingBox().inflate(JewelryConfig.MAGN.get()));
 				for (ItemEntity item : items)
 					if (canPullItem(item)) {
 						if (!canPickStack((Player) target, item.getItem())) {
@@ -72,8 +73,9 @@ public class AmuletItem extends JewelryItem {
 					}
 			}
 			if (JewelcraftHelpers.hasEnchantment(JewelryEnchantments.SATISFICATION.get(), stack)) {
-				if (player.getFoodData().getFoodLevel() < 12)
-					player.getFoodData().setFoodLevel(12);
+				if (player.getFoodData().getFoodLevel() < JewelryConfig.FOOD.get()) {
+					player.getFoodData().setFoodLevel(JewelryConfig.FOOD.get());
+				}
 			}
 			if (JewelcraftHelpers.hasEnchantment(JewelryEnchantments.AQUAMARINE.get(), stack)) {
 				if (target.isEyeInFluid(FluidTags.WATER)) {
@@ -98,17 +100,15 @@ public class AmuletItem extends JewelryItem {
 
 	@Override
 	public int getLootingLevel(SlotContext slot, DamageSource source, LivingEntity target, int loot, ItemStack stack) {
-		if (JewelcraftHelpers.hasEnchantment(JewelryEnchantments.HELIODOR.get(), stack))
-			return super.getLootingLevel(slot, source, target, loot, stack) + 1;
-		return super.getLootingLevel(slot, source, target, loot, stack);
+		return (JewelcraftHelpers.hasEnchantment(JewelryEnchantments.HELIODOR.get(), stack) ? super.getLootingLevel(slot, source, target, loot, stack) + JewelryConfig.LOOT.get() : super.getLootingLevel(slot, source, target, loot, stack));
 	}
 
-	public static boolean canPullItem(ItemEntity item) {
+	private boolean canPullItem(ItemEntity item) {
 		ItemStack stack = item.getItem();
 		return (item.isAlive() && !stack.isEmpty());
 	}
 
-	public static boolean canPickStack(Player target, ItemStack stack) {
+	private boolean canPickStack(Player target, ItemStack stack) {
 		return target.getInventory().getFreeSlot() >= 0;
 	}
 }

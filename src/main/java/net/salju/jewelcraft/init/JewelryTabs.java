@@ -75,8 +75,8 @@ public class JewelryTabs {
 				tabData.accept(JewelryItems.COPPER_RING_ROSE.get());
 				for (Enchantment ench : ForgeRegistries.ENCHANTMENTS) {
 					if (ench instanceof JewelryEnchantment || ench instanceof AmuletEnchantment || ench instanceof RingEnchantment) {
-						tabData.accept(EnchantedBookItem.createForEnchantment(new EnchantmentInstance(ench, ench.getMaxLevel())), CreativeModeTab.TabVisibility.PARENT_TAB_ONLY);
+						tabData.accept(EnchantedBookItem.createForEnchantment(new EnchantmentInstance(ench, ench.getMaxLevel())), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
 					}
 				}
 			}).build());
-}
+}
