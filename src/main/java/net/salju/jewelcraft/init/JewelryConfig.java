@@ -21,6 +21,8 @@ public class JewelryConfig {
 	public static final ForgeConfigSpec.IntValue LOOT;
 
 	public static final ForgeConfigSpec.DoubleValue MAGN;
+	public static final ForgeConfigSpec.IntValue PVE;
+	public static final ForgeConfigSpec.IntValue PVP;
 	public static final ForgeConfigSpec.IntValue FOOD;
 	public static final ForgeConfigSpec.IntValue CRIT;
 	public static final ForgeConfigSpec.IntValue CRITRNG;
@@ -36,7 +38,7 @@ public class JewelryConfig {
 		UNIQUE = BUILDER.comment("Should unique jewelry pieces be added to loot tables?").define("Unique Jewelry", true);
 		BUILDER.pop();
 		BUILDER.push("Enchantment Bonuses");
-		SWMSPD = BUILDER.comment("Swimming Speed bonus from the Aquamarine Enchantment as a percentage").defineInRange("Swimmer", 76, 0, Integer.MAX_VALUE);
+		SWMSPD = BUILDER.comment("Swimming Speed bonus from the Aquamarine Enchantment as a percentage").defineInRange("Swimmer", 60, 0, Integer.MAX_VALUE);
 		MOVSPD = BUILDER.comment("Movement Speed bonus from the Alexandrite Enchantment as a percentage").defineInRange("Alex's Speed", 15, 0, Integer.MAX_VALUE);
 		REACH = BUILDER.comment("Reach bonus from the Alexandrite Enchantment").defineInRange("Alex's Reach", 1.5, 0.0, Double.MAX_VALUE);
 		STEP = BUILDER.comment("Step-Up bonus from the Alexandrite Enchantment").defineInRange("Alex's Step", 0.5, 0.0, Double.MAX_VALUE);
@@ -47,6 +49,8 @@ public class JewelryConfig {
 		BUILDER.pop();
 		BUILDER.push("Enchantment Abilities");
 		MAGN = BUILDER.comment("Magnetic's range for teleporting items to the player").defineInRange("Magnetic", 16.0, 0.0, Double.MAX_VALUE);
+		PVE = BUILDER.comment("Deflect's chance against mobs as a percentage").defineInRange("PvE", 65, 0, 100);
+		PVP = BUILDER.comment("Deflect's chance against players as a percentage").defineInRange("PvP", 20, 0, 100);
 		FOOD = BUILDER.comment("Satisfication's minimum hunger amount for the player").defineInRange("Never Go Hungry", 12, 0, 16);
 		CRIT = BUILDER.comment("Empowered's Vanilla Critical Damage Bonus as a percentage").defineInRange("Critical", 25, 0, Integer.MAX_VALUE);
 		CRITRNG = BUILDER.comment("Empowered's Random Critical Damage Bonus as a percentage").defineInRange("Random Critical", 25, 0, Integer.MAX_VALUE);

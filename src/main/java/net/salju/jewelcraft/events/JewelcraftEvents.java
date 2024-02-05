@@ -25,37 +25,28 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.SugarCaneBlock;
-import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.CactusBlock;
-import net.minecraft.world.level.block.BushBlock;
-import net.minecraft.world.level.block.BambooStalkBlock;
-import net.minecraft.world.level.block.BambooSaplingBlock;
+import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.BoneMealItem;
-import net.minecraft.world.item.ArrowItem;
-import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.monster.ZombifiedPiglin;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.damagesource.DamageTypes;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.util.RandomSource;
 import net.minecraft.util.Mth;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.core.BlockPos;
 
 import javax.annotation.Nullable;
-
-import java.util.List;
+import java.util.List;
 import java.util.ArrayList;
 
 @Mod.EventBusSubscriber
@@ -63,26 +54,23 @@ public class JewelcraftEvents {
 	@SubscribeEvent
 	public static void onEntityAttacked(LivingAttackEvent event) {
 		if (event != null && event.getEntity() != null) {
-			LivingEntity target = event.getEntity();
-			if (target instanceof Player player) {
+			if (event.getEntity() instanceof Player player) {
 				ItemStack amulet = getAmulet(player);
-				Level world = player.level();
-				if (!world.isClientSide) {
+				if (!player.level().isClientSide) {
 					if (amulet != null) {
-						if (JewelcraftHelpers.hasEnchantment(JewelryEnchantments.DEFLECT.get(), amulet) && event.getSource().getDirectEntity() != null) {
-							Entity direct = event.getSource().getDirectEntity();
-							if (direct instanceof AbstractArrow arrow && !(player.isBlocking())) {
-								if ((arrow.getOwner() instanceof Player && Math.random() <= 0.2) || (!(arrow.getOwner() instanceof Player) && Math.random() <= 0.65)) {
+						if (JewelcraftManager.hasEnchantment(JewelryEnchantments.DEFLECT.get(), amulet) && event.getSource().getDirectEntity() != null) {
+							if (event.getSource().getDirectEntity() instanceof Arrow arrow && !(player.isBlocking())) {
+								boolean check = (arrow.getOwner() instanceof Player);
+								int i = Mth.nextInt(player.getRandom(), 1, 100);
+								if ((check && i <= JewelryConfig.PVP.get()) || (!check && i <= JewelryConfig.PVE.get())) {
 									event.setCanceled(true);
-									float x = (Mth.nextFloat(RandomSource.create(), 175.0F, 185.0F));
-									float y = (Mth.nextFloat(RandomSource.create(), -8.0F, 8.0F));
-									ArrowItem item = (ArrowItem) (Items.ARROW);
-									ItemStack stack = new ItemStack(Items.ARROW);
-									AbstractArrow newbie = item.createArrow(world, stack, player);
-									newbie.shootFromRotation(player, (arrow.getOwner().getXRot() - x), (arrow.getOwner().getYRot() + y), 0.0F, 0.65F * 3.0F, 1.0F);
+									float x = (Mth.nextFloat(player.getRandom(), 175.0F, 185.0F));
+									float y = (Mth.nextFloat(player.getRandom(), -8.0F, 8.0F));
+									Arrow newbie = new Arrow(player.level(), player);
 									newbie.setCritArrow(true);
+									newbie.shootFromRotation(player, (arrow.getOwner().getXRot() - x), (arrow.getOwner().getYRot() + y), 0.0F, 0.65F * 3.0F, 1.0F);
+									player.level().addFreshEntity(newbie);
 									arrow.discard();
-									world.addFreshEntity(newbie);
 								}
 							}
 						}
@@ -95,14 +83,12 @@ public class JewelcraftEvents {
 	@SubscribeEvent
 	public static void onDeath(LivingDeathEvent event) {
 		if (event != null && event.getEntity() != null && event.getSource() != null) {
-			LivingEntity target = event.getEntity();
-			DamageSource source = event.getSource();
-			if (target instanceof Player player && !source.is(DamageTypes.FELL_OUT_OF_WORLD)) {
+			if (event.getEntity() instanceof Player player && !event.getSource().is(DamageTypes.FELL_OUT_OF_WORLD)) {
 				if (player.getInventory().contains(new ItemStack(Items.TOTEM_OF_UNDYING))) {
 					ItemStack totem = new ItemStack(Items.TOTEM_OF_UNDYING);
 					ItemStack amulet = getAmulet(player);
 					List<ItemStack> rings = getRings(player);
-					if (amulet != null && JewelcraftHelpers.hasEnchantment(JewelryEnchantments.TOTEM.get(), amulet)) {
+					if (amulet != null && JewelcraftManager.hasEnchantment(JewelryEnchantments.TOTEM.get(), amulet)) {
 						player.getInventory().clearOrCountMatchingItems(p -> totem.getItem() == p.getItem(), 1, player.inventoryMenu.getCraftSlots());
 						player.setHealth(1.0F);
 						player.removeAllEffects();
@@ -113,7 +99,7 @@ public class JewelcraftEvents {
 						event.setCanceled(true);
 					} else if (rings.size() > 0) {
 						for (ItemStack ring : rings) {
-							if (JewelcraftHelpers.hasEnchantment(JewelryEnchantments.TOTEM.get(), ring)) {
+							if (JewelcraftManager.hasEnchantment(JewelryEnchantments.TOTEM.get(), ring)) {
 								player.getInventory().clearOrCountMatchingItems(p -> totem.getItem() == p.getItem(), 1, player.inventoryMenu.getCraftSlots());
 								player.setHealth(1.0F);
 								player.removeAllEffects();
@@ -146,7 +132,7 @@ public class JewelcraftEvents {
 				}
 				if (rings.size() > 0 && item.isEnchanted()) {
 					for (ItemStack ring : rings) {
-						if (JewelcraftHelpers.hasEnchantment(JewelryEnchantments.KYANITE.get(), ring)) {
+						if (JewelcraftManager.hasEnchantment(JewelryEnchantments.KYANITE.get(), ring)) {
 							if (player.experienceLevel > 5 || player.isCreative()) {
 								if (!player.isCreative()) {
 									player.giveExperienceLevels(-5);
@@ -172,14 +158,12 @@ public class JewelcraftEvents {
 	@SubscribeEvent
 	public static void onBlock(ShieldBlockEvent event) {
 		if (event != null && event.getEntity() != null && event.getDamageSource().getDirectEntity() != null) {
-			LivingEntity target = event.getEntity();
-			Entity direct = event.getDamageSource().getDirectEntity();
-			if (target instanceof Player player) {
+			if (event.getEntity() instanceof Player player) {
 				List<ItemStack> rings = getRings(player);
 				if (rings.size() > 0) {
 					for (ItemStack ring : rings) {
-						if (JewelcraftHelpers.hasEnchantment(JewelryEnchantments.ZOMBIE.get(), ring)) {
-							if (direct instanceof LivingEntity bob && !(bob instanceof Zombie)) {
+						if (JewelcraftManager.hasEnchantment(JewelryEnchantments.ZOMBIE.get(), ring)) {
+							if (event.getDamageSource().getDirectEntity() instanceof LivingEntity bob && !(bob instanceof Zombie)) {
 								for (Zombie billy : player.level().getEntitiesOfClass(Zombie.class, player.getBoundingBox().inflate(32.0D))) {
 									if (bob.isAlive() && !(billy instanceof ZombifiedPiglin)) {
 										billy.setTarget(bob);
@@ -197,13 +181,12 @@ public class JewelcraftEvents {
 	@SubscribeEvent
 	public static void onEffect(MobEffectEvent.Applicable event) {
 		if (event != null && event.getEntity() != null && event.getEffectInstance() != null) {
-			LivingEntity target = event.getEntity();
 			MobEffectInstance potion = event.getEffectInstance();
-			if (target instanceof Player player) {
+			if (event.getEntity() instanceof Player player) {
 				ItemStack amulet = getAmulet(player);
 				List<ItemStack> rings = getRings(player);
 				if (amulet != null) {
-					if (JewelcraftHelpers.hasEnchantment(JewelryEnchantments.RAINBOW.get(), amulet)) {
+					if (JewelcraftManager.hasEnchantment(JewelryEnchantments.RAINBOW.get(), amulet)) {
 						if (potion.getEffect() == MobEffects.POISON) {
 							player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, potion.getDuration(), potion.getAmplifier()));
 							event.setResult(Result.DENY);
@@ -215,7 +198,7 @@ public class JewelcraftEvents {
 							event.setResult(Result.DENY);
 						}
 					}
-					if (JewelcraftHelpers.hasEnchantment(JewelryEnchantments.SATISFICATION.get(), amulet)) {
+					if (JewelcraftManager.hasEnchantment(JewelryEnchantments.SATISFICATION.get(), amulet)) {
 						if (potion.getEffect() == MobEffects.HUNGER) {
 							event.setResult(Result.DENY);
 						}
@@ -223,7 +206,7 @@ public class JewelcraftEvents {
 				}
 				if (rings.size() > 0) {
 					for (ItemStack ring : rings) {
-						if (JewelcraftHelpers.hasEnchantment(JewelryEnchantments.RAINBOW.get(), ring)) {
+						if (JewelcraftManager.hasEnchantment(JewelryEnchantments.RAINBOW.get(), ring)) {
 							if (potion.getEffect() == MobEffects.WEAKNESS) {
 								player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, potion.getDuration(), potion.getAmplifier()));
 								event.setResult(Result.DENY);
@@ -242,18 +225,18 @@ public class JewelcraftEvents {
 	@SubscribeEvent
 	public static void onCrops(BlockEvent.CropGrowEvent.Pre event) {
 		if (event != null && event.getState() != null) {
-			BlockState crops = event.getState();
+			BlockState state = event.getState();
 			BlockPos pos = event.getPos();
 			LevelAccessor world = event.getLevel();
 			for (Player player : world.getEntitiesOfClass(Player.class, AABB.ofSize(new Vec3(pos.getX(), pos.getY(), pos.getZ()), 8, 2, 8))) {
 				ItemStack amulet = getAmulet(player);
 				List<ItemStack> rings = getRings(player);
 				if (amulet != null) {
-					if (JewelcraftHelpers.hasEnchantment(JewelryEnchantments.SODALITE.get(), amulet)) {
-						if (crops.getBlock() instanceof CactusBlock && world.isEmptyBlock(pos)) {
-							world.setBlock(pos, crops, 3);
+					if (JewelcraftManager.hasEnchantment(JewelryEnchantments.SODALITE.get(), amulet)) {
+						if (state.getBlock() instanceof CactusBlock && world.isEmptyBlock(pos)) {
+							world.setBlock(pos, state, 3);
 							world.levelEvent(1505, pos, 0);
-						} else if (crops.getBlock() instanceof BushBlock && !(crops.getBlock() instanceof CropBlock)) {
+						} else if (state.getBlock() instanceof BonemealableBlock blok && blok.isValidBonemealTarget(world, pos, state, true)) {
 							BoneMealItem.applyBonemeal(new ItemStack(Items.BONE_MEAL), player.level(), pos, player);
 							world.levelEvent(1505, pos, 0);
 						}
@@ -261,12 +244,11 @@ public class JewelcraftEvents {
 				}
 				if (rings.size() > 0) {
 					for (ItemStack ring : rings) {
-						if (JewelcraftHelpers.hasEnchantment(JewelryEnchantments.SODALITE.get(), ring)) {
-							BlockPos upper = new BlockPos(pos.getX(), pos.getY() + 1, pos.getZ());
-							if (crops.getBlock() instanceof SugarCaneBlock && world.isEmptyBlock(upper)) {
-								world.setBlock(upper, crops, 3);
+						if (JewelcraftManager.hasEnchantment(JewelryEnchantments.SODALITE.get(), ring)) {
+							if (state.getBlock() instanceof SugarCaneBlock && world.isEmptyBlock(pos.above())) {
+								world.setBlock(pos.above(), state, 3);
 								world.levelEvent(1505, pos, 0);
-							} else if ((crops.getBlock() instanceof CropBlock blok && blok.canSurvive(crops, world, pos)) || (crops.getBlock() instanceof BambooStalkBlock) || (crops.getBlock() instanceof BambooSaplingBlock)) {
+							} else if (state.getBlock() instanceof BonemealableBlock blok && blok.isValidBonemealTarget(world, pos, state, true)) {
 								BoneMealItem.applyBonemeal(new ItemStack(Items.BONE_MEAL), player.level(), pos, player);
 								world.levelEvent(1505, pos, 0);
 							}
@@ -281,15 +263,14 @@ public class JewelcraftEvents {
 	@SubscribeEvent
 	public static void onTramply(BlockEvent.FarmlandTrampleEvent event) {
 		if (event != null && event.getEntity() != null) {
-			Entity target = event.getEntity();
-			if (target instanceof Player player) {
+			if (event.getEntity() instanceof Player player) {
 				ItemStack amulet = getAmulet(player);
 				List<ItemStack> rings = getRings(player);
-				if (amulet != null && JewelcraftHelpers.hasEnchantment(JewelryEnchantments.SODALITE.get(), amulet)) {
+				if (amulet != null && JewelcraftManager.hasEnchantment(JewelryEnchantments.SODALITE.get(), amulet)) {
 					event.setCanceled(true);
 				} else if (rings.size() > 0) {
 					for (ItemStack ring : rings) {
-						if (JewelcraftHelpers.hasEnchantment(JewelryEnchantments.SODALITE.get(), ring)) {
+						if (JewelcraftManager.hasEnchantment(JewelryEnchantments.SODALITE.get(), ring)) {
 							event.setCanceled(true);
 						}
 					}
@@ -305,11 +286,11 @@ public class JewelcraftEvents {
 			List<ItemStack> rings = getRings(player);
 			if (rings.size() > 0) {
 				for (ItemStack ring : rings) {
-					if (JewelcraftHelpers.hasEnchantment(JewelryEnchantments.CRITICAL.get(), ring)) {
+					if (JewelcraftManager.hasEnchantment(JewelryEnchantments.CRITICAL.get(), ring)) {
 						if (Math.random() <= ((double) JewelryConfig.CRITCHAN.get() / 100) && !(event.isVanillaCritical()) && JewelryConfig.RNGCRIT.get()) {
 							event.setResult(Result.ALLOW);
 							event.setDamageModifier(event.getDamageModifier() + ((float) JewelryConfig.CRITRNG.get() / 100));
-						} else if (event.isVanillaCritical()) {
+						} else if (event.isVanillaCritical()) {
 							if (!JewelryConfig.VANCRIT.get()) {
 								event.setResult(Result.DENY);
 							} else {
