@@ -63,7 +63,7 @@ public class AmuletItem extends JewelryItem {
 			if (JewelcraftManager.hasEnchantment(JewelryEnchantments.MAGNETIC.get(), stack)) {
 				List<ItemEntity> items = player.level().getEntitiesOfClass(ItemEntity.class, player.getBoundingBox().inflate(JewelryConfig.MAGN.get()));
 				for (ItemEntity item : items) {
-					if (item.isAlive() && player.isShiftKeyDown() && player.getInventory().getSlotWithRemainingSpace(item.getItem()) >= 0) {
+					if (item.isAlive() && player.isShiftKeyDown() && check(player, item.getItem())) {
 						item.setNoPickUpDelay();
 						item.setNoGravity(true);
 						Vec3 v = player.getEyePosition().subtract(item.position());
@@ -105,5 +105,15 @@ public class AmuletItem extends JewelryItem {
 	@Override
 	public int getLootingLevel(SlotContext slot, DamageSource source, LivingEntity target, int loot, ItemStack stack) {
 		return (JewelcraftManager.hasEnchantment(JewelryEnchantments.HELIODOR.get(), stack) ? super.getLootingLevel(slot, source, target, loot, stack) + JewelryConfig.LOOT.get() : super.getLootingLevel(slot, source, target, loot, stack));
+	}
+
+	private boolean check(Player player, ItemStack stack) {
+		int i = player.getInventory().getSlotWithRemainingSpace(stack);
+		if (player.isCreative()) {
+			return true;
+		} else if (player.isSpectator()) {
+			return false;
+		}
+		return (i < 0 ? (player.getInventory().getFreeSlot() >= 0) : true);
 	}
 }
