@@ -5,8 +5,7 @@ import net.salju.jewelcraft.init.JewelryConfig;
 import net.salju.jewelcraft.init.JewelryEnchantments;
 import net.salju.jewelcraft.events.JewelcraftManager;
 import net.minecraftforge.common.ForgeMod;
-
-import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Item;
@@ -16,8 +15,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.server.level.ServerPlayer;
-
-import java.util.UUID;
+import java.util.UUID;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.HashMultimap;
 
@@ -30,14 +28,18 @@ public class RingItem extends JewelryItem {
 	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(SlotContext slot, UUID id, ItemStack stack) {
 		LivingEntity target = slot.entity();
 		Multimap<Attribute, AttributeModifier> stats = HashMultimap.create();
-		if (isCopper(stack))
+		if (isCopper(stack)) {
 			stats.put(Attributes.KNOCKBACK_RESISTANCE, new AttributeModifier(UUID.fromString("7bbafa58-fcf0-4878-a5c5-85c7904b8fa9"), "S-KB-R", JewelryConfig.COPPER.get(), AttributeModifier.Operation.ADDITION));
-		if (isIron(stack))
+		}
+		if (isIron(stack)) {
 			stats.put(Attributes.ARMOR_TOUGHNESS, new AttributeModifier(UUID.fromString("dff4f294-b96e-11ed-afa1-0242ac120002"), "S-Armor-R", JewelryConfig.IRON.get(), AttributeModifier.Operation.ADDITION));
-		if (JewelcraftManager.hasEnchantment(JewelryEnchantments.HELIODOR.get(), stack))
+		}
+		if (JewelcraftManager.hasEnchantment(JewelryEnchantments.HELIODOR.get(), stack)) {
 			stats.put(Attributes.LUCK, new AttributeModifier(UUID.fromString("36696d7a-ba0b-11ed-afa1-0242ac120002"), "S-Luck-R", JewelryConfig.LUCK.get(), AttributeModifier.Operation.ADDITION));
-		if (JewelcraftManager.hasEnchantment(JewelryEnchantments.INFUSED.get(), stack))
+		}
+		if (JewelcraftManager.hasEnchantment(JewelryEnchantments.INFUSED.get(), stack)) {
 			stats.put(Attributes.ATTACK_SPEED, new AttributeModifier(UUID.fromString("3dd24214-ba09-11ed-afa1-0242ac120002"), "S-AtkSpeed-R", ((float) JewelryConfig.ATKSPD.get() / 100), AttributeModifier.Operation.MULTIPLY_TOTAL));
+		}
 		if (JewelcraftManager.hasEnchantment(JewelryEnchantments.ALEXANDRITE.get(), stack)) {
 			stats.put(ForgeMod.BLOCK_REACH.get(), new AttributeModifier(UUID.fromString("159c3056-b96f-11ed-afa1-0242ac120002"), "S-Reach-R", JewelryConfig.REACH.get(), AttributeModifier.Operation.ADDITION));
 			stats.put(Attributes.MOVEMENT_SPEED, new AttributeModifier(UUID.fromString("0a2df15a-b96f-11ed-afa1-0242ac120002"), "S-Speed-R", ((float) JewelryConfig.MOVSPD.get() / 100), AttributeModifier.Operation.MULTIPLY_TOTAL));

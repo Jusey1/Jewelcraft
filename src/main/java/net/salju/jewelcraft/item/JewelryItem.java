@@ -3,8 +3,7 @@ package net.salju.jewelcraft.item;
 import top.theillusivec4.curios.api.type.capability.ICurioItem;
 import top.theillusivec4.curios.api.SlotContext;
 import net.salju.jewelcraft.init.JewelryConfig;
-
-import net.minecraft.world.level.Level;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.item.Vanishable;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.ItemStack;
